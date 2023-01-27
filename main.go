@@ -39,11 +39,6 @@ func main() {
 		logger.Info(".env Loaded")
 	}
 
-	// Running Hub
-	flag.Parse()
-	hub := mysocket.NewHub()
-	go hub.Run()
-
 	// Set Static Assets
 	http.Handle("/assets/",
 		http.StripPrefix("/assets/",
@@ -88,7 +83,13 @@ func main() {
 	http.HandleFunc("/api/do_login", auth_handler.DoLogin)
 	http.HandleFunc("/api/do_logout", auth_handler.DoLogout)
 	http.HandleFunc("/api/do_register", auth_handler.DoRegister)
+	
+	// Running Hub
+	flag.Parse()
+	hub := mysocket.NewHub()
+	go hub.Run()
 
+	// Set Web Socket Routes
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		mysocket.ServeWs(hub, store, w, r)
 	})

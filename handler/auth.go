@@ -59,7 +59,7 @@ func (this *AuthHandler) CheckSession(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	jsonResp, err := json.Marshal(response)
 	if err != nil {
-		this.logger.Error("Error happened in JSON marshal. Err: %s", err)
+		this.logger.Error("Error happened in JSON marshal. Err: %s", err.Error())
 	}
 	w.Write(jsonResp)
 }
@@ -123,7 +123,7 @@ func (this *AuthHandler) DoLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	jsonResp, err := json.Marshal(response)
 	if err != nil {
-		this.logger.Error("Error happened in JSON marshal. Err: %s", err)
+		this.logger.Error("Error happened in JSON marshal. Err: %s", err.Error())
 	}
 	w.Write(jsonResp)
 }
@@ -133,14 +133,14 @@ func (this *AuthHandler) DoLogout(w http.ResponseWriter, r *http.Request) {
 	// Init Response
 	response := make(map[string]string)
 
-	// process get session
+	// Process get session
 	session, _ := this.store.Get(r, os.Getenv("SESSION_KEY"))
 
-	// process to expired session
+	// Process to expired session
 	session.Options.MaxAge = -1
 	session.Save(r, w)
 
-	// Login Failed
+	// Logout Success
 	response["status"] = "success"
 	response["message"] = "Logout success"
 
@@ -149,7 +149,7 @@ func (this *AuthHandler) DoLogout(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	jsonResp, err := json.Marshal(response)
 	if err != nil {
-		this.logger.Error("Error happened in JSON marshal. Err: %s", err)
+		this.logger.Error("Error happened in JSON marshal. Err: %s", err.Error())
 	}
 	w.Write(jsonResp)
 }
@@ -228,7 +228,7 @@ func (this *AuthHandler) DoRegister(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	jsonResp, err := json.Marshal(response)
 	if err != nil {
-		this.logger.Error("Error happened in JSON marshal. Err: %s", err)
+		this.logger.Error("Error happened in JSON marshal. Err: %s", err.Error())
 	}
 	w.Write(jsonResp)
 }
