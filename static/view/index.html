@@ -1,0 +1,94 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="./assets/bootstrap.min.css" rel="stylesheet">
+		<title>Login Session</title>
+		
+	</head>
+	<body>
+		<div class="container">
+			<form class="row mt-4" style="max-width:400px;margin:auto" id="form_login">
+				<h2>Form Login</h2>
+				<div class="mb-3" id="container_message" style="color:#f00"></div>
+				<div class="mb-3">
+					<label for="username" class="form-label">Username</label>
+					<input type="text" class="form-control" id="username" name="username" placeholder=" username@example.com">
+				</div>
+				<div class="mb-3">
+					<label for="password" class="form-label">Password</label>
+					<input type="password" class="form-control" id="password" name="password" placeholder="your password">
+				</div>
+				<div class="mb-3">
+					<button type="submit" class="btn btn-primary mb-3" id="btn_login">Login</button>
+					<button type="submit" class="btn btn-primary mb-3" id="btn_register">Register</button>
+				</div>
+			</form>
+		</div>
+		<script src="./assets/jquery-3.6.2.min.js"></script>
+		<script type="text/javascript">
+			var f_checkSession =function(){
+				// Check if already login
+				$('#btn_login').attr('disabled','disabled');
+				$.get('/api/check_session', 
+					function(res){
+						var oData = res;
+						if(typeof(oData)=='string'){ try{ eval('oData = '+res); }catch(e){} }
+						
+						if(oData.status == "success"){
+							window.location.replace('./chat');
+						}else{
+							console.log('oData :', oData);
+						}
+
+						$('#btn_login').removeAttr('disabled');
+					});
+			};
+
+			var f_login =function(){
+				// Validate Login
+				$('#container_message').html('');
+				$('#btn_login').attr('disabled','disabled').html('Please Wait');
+				$.post('/api/do_login', 
+					$('#form_login').serialize(), 
+					function(res){
+						var oData = res;
+						if(typeof(oData)=='string'){ try{ eval('oData = '+res); }catch(e){} }
+						
+						f_login_response(oData);
+					}
+				).fail(function(res){
+					var oData = res.responseJSON;
+					if(typeof(oData)=='string'){ try{ eval('oData = '+res.responseJSON); }catch(e){} }
+
+					f_login_response(oData);
+				});
+			};
+
+			var f_login_response =function(oData){
+				if(oData.status == "success"){
+					window.location.replace('./dashboard');
+				}else{
+					console.log('oData :', oData);
+					$('#container_message').html(oData.message);
+				}
+
+				$('#btn_login').removeAttr('disabled').html('Login');
+			};
+
+			$(document).ready(function(){
+				f_checkSession();
+				
+				$('#form_login').submit(function(e){
+					f_login();
+					e.preventDefault();
+				});
+
+				$('#btn_register').click(function(e){
+					window.location.replace('./register');
+					e.preventDefault();
+				});
+			});
+		</script>
+	</body>
+</html>
