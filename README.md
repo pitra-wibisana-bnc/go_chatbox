@@ -1,3 +1,5 @@
+Run From Source :
+
 1. Clone this repository
 
 2. Make sure you have golang installed (https://go.dev/doc/install)
@@ -9,3 +11,8 @@
 5. Register new user and login
 
 6. Use different browser to register another user and test for conversation
+
+
+Run From Docker :
+
+https://hub.docker.com/r/pitrawibisana/chatbox
